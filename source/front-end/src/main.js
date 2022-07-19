@@ -18,6 +18,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 import dataV from '@jiaminghi/data-view'
 
+import mixin from "./mixin"
+import VueRouter from 'vue-router'
+
 
 library.add(faPlayCircle, faPauseCircle, faStopCircle, faAngleDoubleRight, faSignInAlt, faSignOutAlt, faFileDownload, faEye, faUser,
   faFileAlt, faWeight, faSyncAlt, faArrowDown, faArrowUp, faClipboardCheck, faTrashAlt, faPlus, faPencilAlt, faSearch,
@@ -32,6 +35,8 @@ Vue.config.performance = true
 Vue.use(CoreuiVue)
 Vue.use(dataV)
 // Vue.use(router)
+
+Vue.mixin(mixin)
 
 var root = location.protocol+'//'+location.hostname
 

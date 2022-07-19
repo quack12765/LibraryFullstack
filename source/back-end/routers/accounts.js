@@ -27,4 +27,14 @@ router.post('/delete_accounts', function (req, res) {
   api.delete_accounts(req, res)
 })
 
+router.post('/getAccountInfoByAccount', function (req, res) {
+  api.get_account_info_by_account(req, res)
+})
+
+router.post('/saveAccountInfo', function (req, res) {
+  api.save_account_info(req, res)
+})
+
+
+
 module.exports = router

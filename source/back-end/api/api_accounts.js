@@ -147,4 +147,48 @@ module.exports = {
 
         dbFactory.action_db(sql, statusData, res);
     },
+
+    get_account_info_by_account: function (req, res) {
+        var sql_getAccountIfo = 
+        ` 
+            SELECT * FROM account
+            WHERE (account = ?)
+        `;
+
+        sql_getAccountIfo = dbFactory.build_mysql_format(sql_getAccountIfo, [req.body.data.account]);
+
+        let statusData = {
+            successCode: 200,
+            errorCode: 500,
+            errorMsg: "Some error occurred while inserting the account."
+        };
+
+        dbFactory.action_db(sql_getAccountIfo, statusData, res);
+    },
+
+    save_account_info: function (req, res) {
+        var sql_saveAccountInfo = 
+        ` 
+            UPDATE account SET
+            email = ?, name = ?, sex = ?, phone = ?, address = ?
+            WHERE account = ?
+        `;
+
+        sql_saveAccountInfo = dbFactory.build_mysql_format(sql_saveAccountInfo, [
+            req.body.data.email,
+            req.body.data.name,
+            req.body.data.sex,
+            req.body.data.phone,
+            req.body.data.address,
+            req.body.data.account
+        ]);
+
+        let statusData = {
+            successCode: 200,
+            errorCode: 500,
+            errorMsg: "Some error occurred while inserting the account."
+        };
+
+        dbFactory.action_db(sql_saveAccountInfo, statusData, res);
+    }
 }

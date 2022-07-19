@@ -5,6 +5,8 @@
 </template>
 
 <script>
+
+
 export default {
   name: 'App',
 
@@ -28,7 +30,7 @@ export default {
         this.isRouterAlive = true;
       })
     }
-  }
+  },
 }
 </script>
 

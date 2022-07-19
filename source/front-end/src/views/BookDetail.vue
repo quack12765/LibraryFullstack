@@ -48,11 +48,18 @@
                     <tr v-for="copy in Copys" :key="copy.accession_number">
                         <td>{{ copy.accession_number }}</td>
                         <td>{{ copy.call_number }}</td>
-                        <td>{{ copy.account === null ? "可借閱" : "借出中 " }}</td>
-                        <td>{{ copy.account === null ? 0 : getCopyReservationByAccession(copy.accession_number) }}</td>
+                        <td>{{ copy.account === null ? "可借閱" : "借出中 (" + ParseDate(copy.borrow_date) + ")"}}</td>
+                        <td>{{ copy.account === null ? 0 : copy.reservation.length }}</td>
                         <td>
-                            <button v-if="!copy.account" @click="HandleBorrow(copy.accession_number)" class="btn btn-success">借閱</button>
-                            <button v-if="copy.account" @click="HandleReserve(copy.accession_number)" class="btn btn-primary">預約</button>
+                            <button 
+                                v-if="!copy.account" 
+                                class="btn btn-success" @click="HandleBorrow(copy.accession_number)">借閱</button>
+                            <button 
+                                v-else-if=" copy.reservation.some( r => r.account === account ) "
+                                class="btn btn-secondary " disabled>已預約</button>
+                            <button 
+                                v-else 
+                                @click="HandleReserve(copy.accession_number)" class="btn btn-primary">預約</button>
                         </td>
                     </tr>
                 </tbody>
@@ -73,6 +80,7 @@ export default {
         return {
             Book: {},
             Copys: [],
+            account: "",
             sel_nav: 0,
         };
     },
@@ -87,12 +95,31 @@ export default {
 
         this.$http
             .post('/api/searchBook/getCopyInfoByISBN', { data: this.$route.params.ISBN })
-            .then(res => {
-                this.Copys = res.data
-                console.log(res.data)
+            .then(CopyInfos => {
+
+                // initialize CopyInfo Object format
+
+                this.Copys = CopyInfos.data.map(e => {return {...e, reservation: []}})
+
+                // go through each CopyInfos to get their own Reservation
+
+                CopyInfos.data.map((CopyInfo, index) => {
+                    this.$http
+                        .post('/api/searchBook/getCopyReservationByAccession', { data: CopyInfo.accession_number })
+                        .then(Reservation => {
+
+                            // get Reservation then store in Copys
+                            this.$set(this.Copys, index, {
+                                ... this.Copys[index],
+                                reservation : Reservation.data
+                            })
+
+                        })
+                        .catch(e => { console.log(e) })
+                })
+                
             })
             .catch(e => { console.log(e) })
-
     },
 
     update() {
@@ -100,52 +127,7 @@ export default {
     },
 
     methods: {
-        getCopyReservationByAccession(acc){
-            this.$http
-                .post('/api/searchBook/getCopyReservationByAccession', { data: acc })
-                .then(res => {
-                    console.log(res.data.length)
-                })
-                .catch(e => { console.log(e) })
-            
-            return 1
-        },
-
-        HandleBorrow(acc) {
-            this.$http
-                .post('/api/searchBook/borrowCopy', { 
-                    data: {
-                        accession_number: acc,
-                        account: sessionStorage.getItem("ACCOUNT")
-                    } 
-                })
-                .then(res => {
-                    alert("借閱成功!")
-                    location.reload()
-                })
-                .catch(e => { 
-                    alert("借閱失敗")
-                    console.log(e) 
-                })
-        },
-
-        HandleReserve(acc) {
-            this.$http
-                .post('/api/searchBook/reserveCopy', { 
-                    data: {
-                        accession_number: acc,
-                        account: sessionStorage.getItem("ACCOUNT")
-                    } 
-                })
-                .then(res => {
-                    alert("預約成功!")
-                    location.reload()
-                })
-                .catch(e => { 
-                    alert("預約失敗")
-                    console.log(e) 
-                })
-        }
+        
     },
 };
 </script>

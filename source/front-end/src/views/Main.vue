@@ -7,10 +7,9 @@
                 </h4>
                 <hr class="mt-0 mb-2" />
                 <div class="container mt-5 mb-5">
-                    <!-- <router-link to="search/">click me</router-link> -->
                     <form @submit="submitSearch">
                         <div class="form-inline justify-content-center mt-5">
-                            <input v-model="searchStr" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                            <input v-model="searchStr" class="form-control mr-sm-2" type="search" placeholder="" aria-label="Search">
                             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                         </div>
                     </form>

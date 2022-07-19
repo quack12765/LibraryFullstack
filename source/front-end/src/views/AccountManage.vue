@@ -66,7 +66,7 @@
                                     <td>{{ b.name }}</td>
                                     <td>{{ b.accession_number }}</td>
                                     <td>{{ ParseDate(b.borrow_date) }}</td>
-                                    <td><button @click="HandleCancelReserve(copy.accession_number)" class="btn btn-danger">取消預約</button></td>
+                                    <td><button @click="HandleCancelReserve(b.accession_number)" class="btn btn-danger">取消預約</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -83,7 +83,7 @@
                             <div class="card col-4 m-2">
                                 <div class="card-body">
                                     <div class="row mb-4">
-                                        <router-link to="account-setting" class="border-right col-6 text-primary">修改個人資料</router-link>
+                                        <router-link :to=" { name: '帳號設定' } " class="border-right col-6 text-primary">修改個人資料</router-link>
                                         <a class="col text-primary">修改密碼</a>
                                     </div>
                                     <div class="card-text border-left p-3">
@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import moment from 'moment';
+
 
 export default {
     data(){
@@ -152,15 +152,7 @@ export default {
             .catch(e => { console.log(e) })
     },
     methods:{
-        ParseDate(str){
-            let date = moment(str)
-            return date.format("yyyy-MM-DD")
-        },
-
-        GetRemainDays(str, deadline){
-            let date = moment(str)
-            return Math.floor(deadline + moment.duration(date.diff(moment())).asDays())
-        }
+    
     }
 }
 </script>

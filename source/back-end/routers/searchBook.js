@@ -36,5 +36,11 @@ router.post('/getBorrowingByAccount', function (req, res) {
 router.post('/getReservingByAccount', function (req, res) {
     BookSearcher.get_reserving_by_account(req, res)
 })
+router.post('/cancelReserveCopy', function (req, res) {
+    BookSearcher.cancel_reserve_copy(req, res)
+})
+
+
+
 
 module.exports = router

@@ -4,6 +4,7 @@ var   http        = require('http')
 const bodyParser  = require('body-parser')
 const account     = require('./routers/accounts')
 const searchBook  = require('./routers/searchBook')
+const location    = require('./routers/location')
 const app         = express()
 
 app.use(bodyParser.json({limit: '50mb',       extended: true}))
@@ -13,6 +14,7 @@ app.use(cors())
 
 app.use('/api/accounts',  account)
 app.use('/api/searchBook',  searchBook)
+app.use('/api/location',  location)
 
 var httpServer = http.createServer(app)
 

@@ -9,8 +9,8 @@ const Main = () => import('@/views/Main')
 const MainMain = () => import('@/views/MainMain')
 const MainSearch = () => import('@/views/MainSearch')
 const AccountManage = () => import('@/views/AccountManage')
-const BookDetail = () => import('@/views/BookDetail')
 const AccountSetting = () => import('@/views/AccountSetting')
+const BookDetail = () => import('@/views/BookDetail')
 
 
 // Dashboard
@@ -80,6 +80,11 @@ function configRoutes() {
                             component: MainSearch,
                             // redirect: "main"
                         },
+                        {
+                            path: 'account-setting',
+                            name: '帳號設定',
+                            component: AccountSetting,
+                        },
                     ],
                     meta: { requiresAuth: true }
                 },
@@ -88,11 +93,7 @@ function configRoutes() {
                     name: '帳號管理',
                     component: AccountManage,
                     children: [
-                        {
-                            path: '/account-setting',
-                            name: '帳號設定',
-                            component: AccountSetting,
-                        },
+                        
                     ],
                     meta: { requiresAuth: true }
                 },

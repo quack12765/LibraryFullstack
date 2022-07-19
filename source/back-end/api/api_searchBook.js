@@ -192,4 +192,20 @@ module.exports = {
         dbFactory.action_db(sql_getReserving, statusData, res);
     },
 
+    cancel_reserve_copy: function (req, res) {
+        let sql_cancelReserve = `
+            DELETE FROM Reserve
+            WHERE (account = ? AND accession_number = ?)
+        `
+        
+        sql_cancelReserve = dbFactory.build_mysql_format(sql_cancelReserve, [req.body.data.account, req.body.data.accession_number]);
+        
+        let statusData = {
+            successCode: 200,
+            errorCode: 500,
+            errorMsg: "Some error occurred while inserting the account."
+        };
+
+        dbFactory.action_db(sql_cancelReserve, statusData, res);
+    }
 }
