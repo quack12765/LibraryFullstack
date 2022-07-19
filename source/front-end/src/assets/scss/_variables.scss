@@ -1,0 +1,32 @@
+// Variable overrides
+$font-size-base:              1rem !default; // was: 1rem
+
+// sidebar brand
+// $sidebar-dark-brand-bg:              rgba($black, .2) !default;
+$sidebar-dark-brand-bg:              #051e34 !default;
+
+$sidebar-dark-nav-link-active-icon-color: #BAFFFD  !default;
+// $sidebar-dark-nav-link-hover-bg:           #7074af !default;
+// $sidebar-dark-nav-link-active-bg:          #6054ec !default;
+$sidebar-dark-nav-link-active-color:       #BAFFFD  !default;
+$sidebar-dark-nav-link-active-bg:          #1a4166 !default;
+$sidebar-dark-nav-link-hover-bg:           #3e31f1 !default;
+
+// $sidebar-dark-bg:#121716 !default;    // $sidebar-dark-bg: $gray-base !default;
+$sidebar-dark-bg:#11293f !default;   
+
+// @import url(//fonts.googleapis.com/earlyaccess/notosanstc.css);
+
+$font-family-sans-serif: 'Noto Sans TC', sans-serif !default;
+
+$cmodal-info-brand-bg:              #1a4166 !default;
+$cbutton-info-brand-bg:             #1a4166 !default;
+$ccardheader-info-connected-bg: 	#6cee5b !default;
+$ccardheader-info-not-connected-bg: #c0c9cf !default;
+
+$theme-colors: (
+	"cmodal-info":	$cmodal-info-brand-bg,
+	"cbutton-info": $cbutton-info-brand-bg,
+	"ccardheader-info": $ccardheader-info-connected-bg,
+	"ccardheader-nc-info": $ccardheader-info-not-connected-bg
+);
