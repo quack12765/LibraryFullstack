@@ -1,8 +1,11 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div class="row justify-content-around">
         <div v-for="book in Books" :key="book.ISBN" class="col-4 pt-3">
             <book-card :isbn="book.ISBN" />
+        </div>
+        <div v-if="Books[0] === undefined" class="mt-5">
+            <p class="display-4 text-center">尚無搜尋結果</p>
         </div>
     </div>
   </div>
@@ -32,6 +35,14 @@ export default {
 
     components: {
         BookCard
+    },
+
+    watch: {
+        '$route.params.name': {
+            handler() {
+                location.reload()
+            }
+        }
     }
     
 }

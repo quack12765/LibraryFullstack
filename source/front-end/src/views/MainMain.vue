@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <h1 class="w-100 mt-5 text-center">精選書籍</h1>
-        <div class="row mt-5">
+        <div class="row mt-5 justify-content-center">
             <div class="col-10 col-lg-4" v-for="bookISBN in PopularBooks" :key="bookISBN">
                 <book-card :isbn="bookISBN" class="h-100" />
             </div>

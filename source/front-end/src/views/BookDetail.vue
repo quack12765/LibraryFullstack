@@ -5,10 +5,10 @@
                 <div class="col-12">
                     <div class="card p-4">
                         <div class="row justify-content-around">
-                            <div class="col-3 mr-5">
+                            <div class="col-sm-12 col-lg mr-5">
                                 <img :src="Book.show_img_url">
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-12 col-lg">
                                 <div class="card-body">
                                     <h3>{{Book.name}}</h3>
                                     <hr>
@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="container">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs" style="cursor:pointer;">
                 <li class="nav-item">
                     <a class="nav-link " :class="{ active: sel_nav == 0 }" @click=" sel_nav = 0 ">館藏</a>
                 </li>
@@ -48,7 +48,7 @@
                     <tr v-for="copy in Copys" :key="copy.accession_number">
                         <td>{{ copy.accession_number }}</td>
                         <td>{{ copy.call_number }}</td>
-                        <td>{{ copy.account === null ? "可借閱" : "借出中 (" + ParseDate(copy.borrow_date) + ")"}}</td>
+                        <td>{{ copy.account === null ? "可借閱" : "借出中 (" + PlusDateByDaysAndParse(copy.borrow_date, 20) + ")"}}</td>
                         <td>{{ copy.account === null ? 0 : copy.reservation.length }}</td>
                         <td>
                             <button 
@@ -67,12 +67,18 @@
             <div v-if="sel_nav == 1">
                 <p> {{ Book.intro }} </p>
             </div>
+            <div v-if="sel_nav == 2">
+                <comment-board :commentinfo="mock_comment" />
+                <comment-board v-for="comment in comments" :key="comment" :commentinfo="comment" />
+            </div>
         </div>
     </div>
 </template>
 
 
 <script>
+import CommentBoard from '../components/commentBoard/commentBoard.vue';
+
 export default {
     inject: ["reload"],
 
@@ -80,19 +86,64 @@ export default {
         return {
             Book: {},
             Copys: [],
-            account: "",
+            comments: [],
+            mock_comment: {},
             sel_nav: 0,
         };
     },
 
     mounted() {
+
+        // Get Top card information (Book's information)
         this.$http
             .post('/api/searchBook/getBookInfoByISBN', { data: this.$route.params.ISBN })
             .then(res => {
                 this.Book = res.data[0]
+
+                // and by the way, use Book data to get the comment information
+
+
+                // build a personal comment data for user to edit
+                this.$http
+                    .post('/api/comment/getPersonalComment', { 
+                        data: {
+                            ISBN: this.Book.ISBN,
+                            account: this.account,
+                        } 
+                    })
+                    .then(res => {
+                        this.mock_comment = res.data[0] ? res.data[0] : {
+                            comment_ISBN: this.Book.ISBN,
+                            comment_account: this.account,
+                            comment: "",
+                            score: 0,
+
+                            // create a var to identify whether user had uploaded data
+                            isMock: true
+                        }
+                    })
+                    .catch(e => { 
+                        console.log(e) 
+                    })
+
+                // get all comment informations
+                this.$http
+                    .post('/api/comment/getAllCommentsByISBN', { 
+                        data: {
+                            ISBN: this.Book.ISBN,
+                            account: this.account
+                        } 
+                    })
+                    .then(res => {
+                        this.comments = res.data
+                    })
+                    .catch(e => { console.log(e) })
             })
             .catch(e => { console.log(e) })
 
+
+
+        // Get first & second nav selection information
         this.$http
             .post('/api/searchBook/getCopyInfoByISBN', { data: this.$route.params.ISBN })
             .then(CopyInfos => {
@@ -120,15 +171,16 @@ export default {
                 
             })
             .catch(e => { console.log(e) })
+
     },
 
     update() {
         
     },
 
-    methods: {
-        
-    },
+    components: {
+        CommentBoard
+    }
 };
 </script>
 

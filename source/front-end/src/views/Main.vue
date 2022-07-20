@@ -37,7 +37,7 @@ export default {
         submitSearch(event) {
             event.preventDefault()
 
-            this.$router.push('search/' + this.searchStr)
+            this.$router.push('/main/search/' + this.searchStr)
         },
     },
 };

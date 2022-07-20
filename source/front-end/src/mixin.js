@@ -21,6 +21,10 @@ export default {
             return Math.floor(deadline + moment.duration(date.diff(moment())).asDays())
         },
 
+        PlusDateByDaysAndParse(date, days){
+            return moment(date).add(days, "d").format("yyyy-MM-DD")
+        },
+
 
 
         // Book & Copy

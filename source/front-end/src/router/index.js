@@ -10,6 +10,7 @@ const MainMain = () => import('@/views/MainMain')
 const MainSearch = () => import('@/views/MainSearch')
 const AccountManage = () => import('@/views/AccountManage')
 const AccountSetting = () => import('@/views/AccountSetting')
+const PasswordSetting = () => import('@/views/PasswordSetting')
 const BookDetail = () => import('@/views/BookDetail')
 
 
@@ -60,7 +61,7 @@ function configRoutes() {
             component: TheContainer,
             children: [
                 {
-                    path: '/Main',
+                    path: 'Main',
                     name: '#',
                     component: Main,
                     children: [
@@ -70,21 +71,12 @@ function configRoutes() {
                             component: MainMain,
                         },
                         {
-                            path: 'book/:ISBN',
-                            name: '書籍一覽',
-                            component: BookDetail,
-                        },
-                        {
                             path: 'search/:name?',
                             name: '搜尋結果',
                             component: MainSearch,
                             // redirect: "main"
                         },
-                        {
-                            path: 'account-setting',
-                            name: '帳號設定',
-                            component: AccountSetting,
-                        },
+                        
                     ],
                     meta: { requiresAuth: true }
                 },
@@ -92,18 +84,24 @@ function configRoutes() {
                     path: 'my-account',
                     name: '帳號管理',
                     component: AccountManage,
-                    children: [
-                        
-                    ],
                     meta: { requiresAuth: true }
                 },
-                // {
-                //     path: '/account-setting',
-                //     name: 'as',
-                //     component: AccountSetting,
-                    
-                //     meta: { requiresAuth: true }
-                // },
+                {
+                    path: 'book/:ISBN',
+                    name: '書籍一覽',
+                    component: BookDetail,
+                    meta: { requiresAuth: true }
+                },
+                {
+                    path: 'account-setting',
+                    name: '帳號設定',
+                    component: AccountSetting,
+                },
+                {
+                    path: 'password-setting',
+                    name: '密碼設定',
+                    component: PasswordSetting,
+                },
             ]
         },
         {

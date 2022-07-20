@@ -16,12 +16,6 @@ export const admin = [
             },
             {
                 _name: 'CSidebarNavItem',
-                name: 'book test',
-                to: '/account-setting',
-                icon: 'cil-people'
-            },
-            {
-                _name: 'CSidebarNavItem',
                 name: '登出',
                 to: '/pages/login',
                 icon: 'cil-account-logout'

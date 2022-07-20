@@ -32,7 +32,7 @@ module.exports = {
 
         var sql = ' SELECT * FROM account WHERE account = ? AND password = ? ';
 
-        sql = dbFactory.build_mysql_format(sql,[req.body.data.account,sha256(req.body.data.password)]);
+        sql = dbFactory.build_mysql_format(sql,[req.body.data.account, sha256(req.body.data.password)]);
 
         let statusData = {
             successCode: 200,
@@ -170,7 +170,7 @@ module.exports = {
         var sql_saveAccountInfo = 
         ` 
             UPDATE account SET
-            email = ?, name = ?, sex = ?, phone = ?, address = ?
+            email = ?, name = ?, sex = ?, phone = ?, address = ?, city = ?, region = ?
             WHERE account = ?
         `;
 
@@ -180,6 +180,8 @@ module.exports = {
             req.body.data.sex,
             req.body.data.phone,
             req.body.data.address,
+            req.body.data.city,
+            req.body.data.region,
             req.body.data.account
         ]);
 

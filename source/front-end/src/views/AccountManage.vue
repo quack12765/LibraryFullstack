@@ -40,7 +40,7 @@
                             <tbody>
                                 <tr v-for="(b, index) in Borrowing" :key="b.accession_number">
                                     <td>{{ index + 1 }}</td>
-                                    <td>{{ b.name }}</td>
+                                    <td><router-link :to=" '/book/' + b.ISBN ">{{ b.name }}</router-link></td>
                                     <td>{{ b.accession_number }}</td>
                                     <td>{{ ParseDate(b.borrow_date) }}</td>
                                     <td>{{ GetRemainDays(b.borrow_date, 20) }}</td>
@@ -63,7 +63,7 @@
                             <tbody>
                                 <tr v-for="(b, index) in Reserving" :key="b.accession_number" class="h-100">
                                     <td>{{ index + 1 }}</td>
-                                    <td>{{ b.name }}</td>
+                                    <td><router-link :to=" '/book/' + b.ISBN ">{{ b.name }}</router-link></td>
                                     <td>{{ b.accession_number }}</td>
                                     <td>{{ ParseDate(b.borrow_date) }}</td>
                                     <td><button @click="HandleCancelReserve(b.accession_number)" class="btn btn-danger">取消預約</button></td>
@@ -79,12 +79,13 @@
                 <div class="col-12">
                     <div class="card p-4 border">
                         <h3>帳號管理</h3>
+                        <div class="container">
                         <div class="row">
-                            <div class="card col-4 m-2">
+                            <div class="card col-sm-11 col-lg-4 m-2">
                                 <div class="card-body">
                                     <div class="row mb-4">
                                         <router-link :to=" { name: '帳號設定' } " class="border-right col-6 text-primary">修改個人資料</router-link>
-                                        <a class="col text-primary">修改密碼</a>
+                                        <router-link :to=" { name: '密碼設定' } " class="col text-primary">修改密碼</router-link>
                                     </div>
                                     <div class="card-text border-left p-3">
                                         <small class="">
@@ -107,6 +108,7 @@
                             </div> -->
                         </div>
                     </div>
+                    </div>
                 </div>
             </div>
        </div>
@@ -114,8 +116,6 @@
 </template>
 
 <script>
-
-
 export default {
     data(){
         return {
@@ -135,7 +135,6 @@ export default {
             })
             .then(res => {
                 this.Borrowing = res.data
-                console.log(res.data)
             })
             .catch(e => { console.log(e) })
 
@@ -147,12 +146,11 @@ export default {
             })
             .then(res => {
                 this.Reserving = res.data
-                console.log(res.data)
             })
             .catch(e => { console.log(e) })
     },
     methods:{
-    
+        
     }
 }
 </script>
