@@ -1,3 +1,6 @@
+// import moment from 'moment';
+// import { transfer_copy } from 'api_location.js'
+
 var path = require('path');
 var db = require('../utility/DbFactory');
 
@@ -131,13 +134,13 @@ module.exports = {
         let sql_isCopyResrve = ' SELECT * FROM Reserve WHERE (accession_number = ? AND account = ?) ';
         let sql_Borrow = ` 
             INSERT INTO Reserve 
-            (accession_number, account, reserve_date)
+            (accession_number, account, reserve_date, branch)
             VALUE
-            (?, ?, CURDATE());
+            (?, ?, CURDATE(), ?);
         `;
 
         sql_isCopyResrve = dbFactory.build_mysql_format(sql_isCopyResrve, [req.body.data.accession_number, req.body.data.account]);
-        sql_Borrow = dbFactory.build_mysql_format(sql_Borrow, [req.body.data.accession_number, req.body.data.account]);
+        sql_Borrow = dbFactory.build_mysql_format(sql_Borrow, [req.body.data.accession_number, req.body.data.account, req.body.data.branch]);
         
         let statusData = {
             successCode: 200,
@@ -207,5 +210,131 @@ module.exports = {
         };
 
         dbFactory.action_db(sql_cancelReserve, statusData, res);
-    }
+    },
+
+
+
+
+    // admin
+
+    get_borrowing: function (req, res) {
+        let sql_getBorrowing = `
+            SELECT * FROM Borrow
+            LEFT JOIN Copy ON (Borrow.accession_number = Copy.accession_number)
+            LEFT JOIN Books ON Copy.ISBN = Books.ISBN
+        `
+        
+        // sql_getBorrowing = dbFactory.build_mysql_format(sql_getBorrowing, [req.body.data.account]);
+        
+        let statusData = {
+            successCode: 200,
+            errorCode: 500,
+            errorMsg: "Some error occurred while inserting the account."
+        };
+
+        dbFactory.action_db(sql_getBorrowing, statusData, res);
+    },
+
+    back_copy_by_accession: function (req, res) {
+        let sql_BackCopy = `
+            DELETE FROM Borrow
+            WHERE (accession_number = ?)
+        `
+
+        let sql_checkReserve = `
+            SELECT * FROM Reserve
+            WHERE (accession_number = ?)
+        `
+        
+        sql_BackCopy = dbFactory.build_mysql_format(sql_BackCopy, [req.body.data.accession_number]);
+        sql_checkReserve = dbFactory.build_mysql_format(sql_checkReserve, [req.body.data.accession_number]);
+
+        let statusData = {
+            successCode: 200,
+            errorCode: 500,
+            errorMsg: "沒有書被歸還!"
+        };
+
+        // dbFactory.action_db(sql, statusData, res);
+
+        dbFactory.asyncQuery(sql_BackCopy).then((value) => {
+            console.log(value)
+            if (value.affectedRows !== 0) {
+                dbFactory.asyncQuery(sql_checkReserve).then((reserves) => {
+                    
+                    // no one reserve, change copy's location and set state to zero
+                    if(reserves.length === 0){
+                        let sql_UpdateCopy = `
+                            UPDATE Copy SET 
+                            location = ?, state = ?
+                            WHERE accession_number = ?
+                        `
+                        sql_UpdateCopy = dbFactory.build_mysql_format(sql_UpdateCopy, [
+                            req.body.data.location,
+                            0,
+                            req.body.data.accession_number
+                        ]);
+
+                        dbFactory.action_db(sql_UpdateCopy, statusData, res);
+
+                        return ;
+                    }
+
+
+                    // Maybe need to Transfer
+
+                    // Finding the index that is reserved earliest 
+                    let index = Math.min(reserves.map((e) => {
+                        moment.duration(moment(e.reserve_date).diff(moment()))
+                    }))
+
+                    reserves = reserves[index]
+
+                    // dont need transfer if they are same brance
+                    if(reserves.branch === req.body.data.location){
+                        // span()
+                        return ;
+                    }
+
+                    // transfer the copy
+                    let sql = `
+                        INSERT INTO transfer 
+                        (out_branch, in_branch, date, accession_number)
+                        VALUE
+                        (?, ?, CURDATE(), ?);
+                    `
+                    
+                    sql = dbFactory.build_mysql_format(sql, [
+                        req.body.data.location,
+                        reserves.branch, 
+                        reserves.accession_number
+                    ]);
+
+                    dbFactory.action_db(sql, statusData, res);
+                });
+            }else{
+                res.status(statusData.errorCode).send({ message: statusData.errorMsg })
+            }
+        });
+    },
+
+    get_borrowing_by_branch: function (req, res) {
+        let sql = `
+            SELECT * FROM Borrow
+            LEFT JOIN Copy ON (Borrow.accession_number = Copy.accession_number)
+            LEFT JOIN Books ON Copy.ISBN = Books.ISBN
+            WHERE (branch = ?)
+        `
+        
+        sql = dbFactory.build_mysql_format(sql, [req.body.data.branch]);
+        
+        let statusData = {
+            successCode: 200,
+            errorCode: 500,
+            errorMsg: ""
+        };
+
+        dbFactory.action_db(sql, statusData, res);
+    },
+
 }

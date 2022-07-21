@@ -31,10 +31,13 @@
                                     <template #prepend-content><CIcon name="cil-lock-locked"/></template>
                                 </CInput>
                                 <CRow>
-                                    <CCol col="6">
+                                    <CCol col="4">
                                         <CButton color="link" class="px-0" @click="showAlert">忘記密碼?</CButton>
                                     </CCol>
-                                    <CCol col="6" class="text-right">
+                                    <CCol col="4">
+                                        <router-link :to=" { name: 'Register' } ">註冊</router-link>
+                                    </CCol>
+                                    <CCol col="4" class="text-right">
                                         <CButton color="info" class="px-4" @click="login">登入</CButton>
                                     </CCol>
                                 </CRow>
@@ -89,9 +92,11 @@ export default {
 
                                 let role = sessionStorage.getItem('ROLE')
 
-                                if(role === 'admin' || role === 'user' || role === 'guest') {
+                                if(role === 'admin') {
+                                    this.$router.push('/main/admin-main')
+                                }else if (role === 'user') {
                                     this.$router.push('/main/main')
-                                } else {
+                                }else {
                                     alert('帳號權限有問題，請聯繫系統管理員!!!')
                                 }
                             } else {

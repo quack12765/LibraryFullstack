@@ -1,4 +1,4 @@
-export const admin = [
+export const user = [
     {
         _name: 'CSidebarNav',
         _children: [
@@ -25,34 +25,14 @@ export const admin = [
     }
 ]
 
-export const user = [
+export const admin = [
     {
         _name: 'CSidebarNav',
         _children: [
             {
                 _name: 'CSidebarNavItem',
-                name: '首頁',
-                to: '/main',
-                icon: 'cil-home',
-            },
-            {
-                _name: 'CSidebarNavItem',
-                name: '登出',
-                to: '/pages/login',
-                icon: 'cil-account-logout'
-            },
-        ]
-    }
-]
-
-export const guest = [
-    {
-        _name: 'CSidebarNav',
-        _children: [
-            {
-                _name: 'CSidebarNavItem',
-                name: '首頁',
-                to: '/main',
+                name: '管理者首頁',
+                to: '/main/admin-main',
                 icon: 'cil-home',
             },
             {

@@ -10,11 +10,11 @@
                             </div>
                             <div class="col-9 card-body">
                                 <div class="card-title">
-                                    <h1>USER</h1>
+                                    <h1>{{ accountInfo.account }}</h1>
                                 </div>
                                 <hr>
                                 <div class="card-text">
-                                    <p> Hello guys! </p>
+                                    <p> {{ accountInfo.intro || '尚無自我介紹' }} </p>
                                 </div>
                             </div>
                         </div>
@@ -120,13 +120,26 @@ export default {
     data(){
         return {
             Borrowing: [],
-            Reserving: []
+            Reserving: [],
+            accountInfo: {}
         }
     },
     created(){
         
     },
     mounted() {
+        this.$http
+            .post('/api/accounts/getAccountInfoByAccount', { 
+                data: {
+                    account: sessionStorage.getItem("ACCOUNT") 
+                }
+            })
+            .then(res => {
+                this.accountInfo = res.data[0]
+                console.log(res.data[0])
+            })
+            .catch(e => { console.log(e) })
+
         this.$http
             .post('/api/searchBook/getBorrowingByAccount', { 
                 data: {

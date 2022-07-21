@@ -67,6 +67,15 @@
                         >
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label for="intro" class="col-sm-2 col-form-label">自我介紹</label>
+                    <div class="col-sm-10">
+                        <textarea type="textarea" class="form-control" id="intro" rows="4"
+                            v-model="account_info.intro"
+                        >
+                        </textarea>
+                    </div>
+                </div>
                 <button @click.prevent="HandleSaveAccountInfo" class="btn btn-primary">確定修改</button>
             </form>
         </div>

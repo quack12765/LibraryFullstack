@@ -30,9 +30,6 @@ export default {
             case "user":
                 this.nav = user;
                 break;
-            case "guest":
-                this.nav = guest;
-                break;
             default:
                 break;
         }

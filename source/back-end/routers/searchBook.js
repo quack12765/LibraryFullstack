@@ -41,6 +41,18 @@ router.post('/cancelReserveCopy', function (req, res) {
 })
 
 
+// admin
+
+router.post('/getBorrowing', function (req, res) {
+    BookSearcher.get_borrowing(req, res)
+})
+router.post('/backCopyByAccession', function (req, res) {
+    BookSearcher.back_copy_by_accession(req, res)
+})
+router.post('/getBorrowingByBranch', function (req, res) {
+    BookSearcher.get_borrowing_by_branch(req, res)
+})
+
 
 
 module.exports = router

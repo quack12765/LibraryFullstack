@@ -59,7 +59,7 @@
                                 class="btn btn-secondary " disabled>已預約</button>
                             <button 
                                 v-else 
-                                @click="HandleReserve(copy.accession_number)" class="btn btn-primary">預約</button>
+                                @click="sel_reserve_copy = copy" class="btn btn-primary">預約</button>
                         </td>
                     </tr>
                 </tbody>
@@ -70,6 +70,27 @@
             <div v-if="sel_nav == 2">
                 <comment-board :commentinfo="mock_comment" />
                 <comment-board v-for="comment in comments" :key="comment" :commentinfo="comment" />
+            </div>
+        </div>
+
+        <div class="jumpFrame row justify-content-center align-items-center" v-if="sel_reserve_copy !== null" @click="sel_reserve_copy = null">
+            <div class="card col-6 p-5" @click.stop>
+                <h3>選擇取書地點</h3>
+                <ul class="mt-3">
+                    <li> 此書將會先讓較早預約的人借閱 </li>
+                    <li> 如果輪到您取書，將會以電子郵件或是簡訊通知 </li>
+                    <li> 館藏將會留在櫃台7天, 如未領取，視同棄權 </li>
+                </ul>
+                <hr>
+                <form>
+                    <div class="form-group form-row">
+                        <label for="address col" class="col-sm-2 col-form-label">取書地點</label>
+                        <select class="form-control col" v-model="sel_reserve_copy.location" id="address">
+                            <option v-for="branch in branchs" :key="branch.branch_name" >{{ branch.branch_name }}</option>
+                        </select>
+                    </div>
+                </form>
+                <button class="btn btn-primary mt-5" @click="HandleReserve(sel_reserve_copy)">確定</button>
             </div>
         </div>
     </div>
@@ -89,6 +110,9 @@ export default {
             comments: [],
             mock_comment: {},
             sel_nav: 0,
+            sel_branch: "",
+
+            sel_reserve_copy: null
         };
     },
 
@@ -171,7 +195,6 @@ export default {
                 
             })
             .catch(e => { console.log(e) })
-
     },
 
     update() {
@@ -184,7 +207,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .Hide {
         display: none;
     }

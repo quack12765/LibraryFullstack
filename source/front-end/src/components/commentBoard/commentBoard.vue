@@ -29,8 +29,8 @@
                         </form>
                     </div>
                     <div class="mt-3">
-                        <button v-if="commentinfo.isMock !== true" @click="$set(commentinfo, 'isMock', true)" class="btn btn-primary mt-3">修改評論</button>
-                        <button v-if="commentinfo.isMock !== true" @click="HandleDeleteComment" class="btn btn-danger mt-3 ml-3">刪除評論</button>
+                        <button v-if=" commentinfo.isMock !== true && commentinfo.comment_account === account " @click="$set(commentinfo, 'isMock', true)" class="btn btn-primary mt-3">修改評論</button>
+                        <button v-if=" commentinfo.isMock !== true && commentinfo.comment_account === account " @click="HandleDeleteComment" class="btn btn-danger mt-3 ml-3">刪除評論</button>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@ export default {
         return {
             maxScore: 5,
             ori_scoreMap: [],
-            sel_scoreMap: []
+            sel_scoreMap: [],
         }
     },
 

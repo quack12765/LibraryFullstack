@@ -45,7 +45,28 @@ export default {
 
     methods: {
         HandleModifyPassword() {
+            if ( this.in_Password !== this.in_confirmPassword ) {
+                alert("密碼不一致!");
 
+                return ;
+            }
+
+            this.$http
+                .post('/api/accounts/update_password_by_old_password', { 
+                    data: {
+                        oldPassword: this.in_oldPassword,
+                        password: this.in_Password,
+                        account: this.account,
+                    } 
+                })
+                .then(res => {
+                    alert(res.data.affectedRows === 0 ? "修改失敗!" : "修改成功!")
+                    location.reload()
+                })
+                .catch(e => {
+                    alert("修改失敗!") 
+                    console.log(e) 
+                })
         }
     }
 }

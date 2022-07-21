@@ -3,7 +3,8 @@ import moment from 'moment';
 export default {
     data(){
         return {
-            account: ""
+            account: "",
+            branchs: [],
         }
     },
 
@@ -47,11 +48,12 @@ export default {
                 })
         },
 
-        HandleReserve(acc) {
+        HandleReserve(copyinfo) {
             this.$http
                 .post('/api/searchBook/reserveCopy', { 
                     data: {
-                        accession_number: acc,
+                        accession_number: copyinfo.accession_number,
+                        branch: copyinfo.location,
                         account: sessionStorage.getItem("ACCOUNT")
                     } 
                 })
@@ -95,5 +97,13 @@ export default {
 
     mounted() {
         this.account = sessionStorage.getItem("ACCOUNT") 
+
+        // Get all branchs info
+        this.$http
+            .post('/api/location/getBranchList')
+            .then(res => {
+                this.branchs = res.data
+            })
+            .catch(e => { console.log(e) })
     }
 }

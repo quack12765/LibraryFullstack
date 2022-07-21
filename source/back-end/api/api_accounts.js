@@ -55,22 +55,16 @@ module.exports = {
         dbFactory.action_db(sql, statusData, res);
     },
     insert_accounts:function (req, res) {
-        let example = ['account', 'password','name','job_number', 'dept','role'];
-
-        if (false === utility.data_check(req.body.data, example)) {
-            res.status(400).json('傳入值出現非預期狀況，請確認後再進行操作!');
-            return;
-        };
-
-        var sql = ' INSERT INTO `account` (`account`,`password`,`name`,`job_number`,`dept`,`role`) VALUES (?,?,?,?,?,?) ';
+        var sql = ` 
+            INSERT INTO account ( account, password, role) VALUES (?, ?, 'user') 
+        `;
 
         sql = dbFactory.build_mysql_format(sql,
-            [   req.body.data.account,
+            [   
+                req.body.data.account,
                 sha256(req.body.data.password),
-                req.body.data.name,
-                req.body.data.job_number,
-                req.body.data.dept,
-                req.body.data.role  ]);
+                // req.body.data.account,
+            ]);
 
         let statusData = {
             successCode: 201,
@@ -127,6 +121,30 @@ module.exports = {
 
         dbFactory.action_db(sql, statusData, res);
     },
+    update_password_by_old_password:function (req, res) {
+        let example = ['account', 'password', 'oldPassword'];
+
+        if (false === utility.data_check(req.body.data, example)) {
+            res.status(400).json('傳入值出現非預期狀況，請確認後再進行操作!');
+            return;
+        };
+
+        var sql = ' UPDATE `account` SET `password` = ? WHERE (`account` = ? AND `password` = ?); ';
+
+        sql = dbFactory.build_mysql_format(sql,[   
+            sha256(req.body.data.password),
+            req.body.data.account,
+            sha256(req.body.data.oldPassword) 
+        ]);
+
+        let statusData = {
+            successCode: 202,
+            errorCode: 500,
+            errorMsg: "Some error occurred while inserting the account."
+        };
+
+        dbFactory.action_db(sql, statusData, res);
+    },
     delete_accounts:function (req, res) {
         let example = ['account'];
 
@@ -170,7 +188,7 @@ module.exports = {
         var sql_saveAccountInfo = 
         ` 
             UPDATE account SET
-            email = ?, name = ?, sex = ?, phone = ?, address = ?, city = ?, region = ?
+            email = ?, name = ?, sex = ?, phone = ?, address = ?, city = ?, region = ?, intro = ?
             WHERE account = ?
         `;
 
@@ -182,6 +200,7 @@ module.exports = {
             req.body.data.address,
             req.body.data.city,
             req.body.data.region,
+            req.body.data.intro,
             req.body.data.account
         ]);
 

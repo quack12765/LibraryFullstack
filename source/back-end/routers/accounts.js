@@ -23,6 +23,10 @@ router.patch('/update_password', function (req, res) {
   api.update_password(req, res)
 })
 
+router.post('/update_password_by_old_password', function (req, res) {
+  api.update_password_by_old_password(req, res)
+})
+
 router.post('/delete_accounts', function (req, res) {
   api.delete_accounts(req, res)
 })

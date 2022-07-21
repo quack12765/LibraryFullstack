@@ -48,5 +48,77 @@ module.exports = {
         };
 
         dbFactory.action_db(sql, statusData, res);
+    },
+
+    get_branch_list: function (req, res) {
+        let sql = `
+            SELECT * FROM branch 
+        `;
+        
+        // sql = dbFactory.build_mysql_format(sql, [req.body.data.city]);
+        
+        let statusData = {
+            successCode: 200,
+            errorCode: 500,
+            errorMsg: "Some error occurred while inserting the account."
+        };
+
+        dbFactory.action_db(sql, statusData, res);
+    },
+
+    // admin
+
+    transfer_copy: function (req, res) {
+        let sql = `
+            INSERT INTO transfer 
+            (out_branch, in_branch, date)
+            VALUE
+            (?, ?, CURDATE());
+        `
+        
+        sql = dbFactory.build_mysql_format(sql, [req.body.data.in_branch, req.body.data.out_branch]);
+        
+        let statusData = {
+            successCode: 200,
+            errorCode: 500,
+            errorMsg: ""
+        };
+
+        dbFactory.action_db(sql, statusData, res);
+        
+    },
+
+    get_in_transfer_by_branch: function (req, res) {
+        let sql = `
+            SELECT * FROM Transfer
+            WHERE (in_branch = ?)
+        `
+        
+        sql = dbFactory.build_mysql_format(sql, [req.body.data.in_branch]);
+        
+        let statusData = {
+            successCode: 200,
+            errorCode: 500,
+            errorMsg: ""
+        };
+
+        dbFactory.action_db(sql, statusData, res);
+    },
+
+    get_out_transfer_by_branch: function (req, res) {
+        let sql = `
+            SELECT * FROM Transfer
+            WHERE (out_branch = ?)
+        `
+        
+        sql = dbFactory.build_mysql_format(sql, [req.body.data.out_branch]);
+        
+        let statusData = {
+            successCode: 200,
+            errorCode: 500,
+            errorMsg: ""
+        };
+
+        dbFactory.action_db(sql, statusData, res);
     }
 }

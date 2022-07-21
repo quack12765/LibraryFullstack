@@ -13,6 +13,8 @@ const AccountSetting = () => import('@/views/AccountSetting')
 const PasswordSetting = () => import('@/views/PasswordSetting')
 const BookDetail = () => import('@/views/BookDetail')
 
+const AdminMain = () => import('@/views/AdminMain')
+
 
 // Dashboard
 
@@ -76,7 +78,11 @@ function configRoutes() {
                             component: MainSearch,
                             // redirect: "main"
                         },
-                        
+                        {
+                            path: 'admin-main',
+                            name: '管理者首頁',
+                            component: AdminMain,
+                        },
                     ],
                     meta: { requiresAuth: true }
                 },
