@@ -39,6 +39,7 @@
                     <tr>
                         <th scope="col">條碼號</th>
                         <th scope="col">索書號</th>
+                        <th scope="col">館藏位置</th>
                         <th scope="col">館藏狀態</th>
                         <th scope="col">預約人數</th>
                         <th scope="col"></th>
@@ -48,14 +49,15 @@
                     <tr v-for="copy in Copys" :key="copy.accession_number">
                         <td>{{ copy.accession_number }}</td>
                         <td>{{ copy.call_number }}</td>
-                        <td>{{ copy.account === null ? "可借閱" : "借出中 (" + PlusDateByDaysAndParse(copy.borrow_date, 20) + ")"}}</td>
+                        <td>{{ copy.location }}</td>
+                        <td>{{ MapCodeToState(copy.state) === '' ? "借出中 (" + PlusDateByDaysAndParse(copy.borrow_date, 20) + ")" : MapCodeToState(copy.state)}}</td>
                         <td>{{ copy.account === null ? 0 : copy.reservation.length }}</td>
                         <td>
+                            <!-- <button 
+                                v-if="copy.state === 0" 
+                                class="btn btn-success" @click="HandleBorrow(copy.accession_number)">借閱</button> -->
                             <button 
-                                v-if="!copy.account" 
-                                class="btn btn-success" @click="HandleBorrow(copy.accession_number)">借閱</button>
-                            <button 
-                                v-else-if=" copy.reservation.some( r => r.account === account ) "
+                                v-if=" copy.reservation.some( r => r.account === account ) "
                                 class="btn btn-secondary " disabled>已預約</button>
                             <button 
                                 v-else 

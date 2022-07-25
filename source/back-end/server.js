@@ -5,7 +5,7 @@ const bodyParser  = require('body-parser')
 const account     = require('./routers/accounts')
 const searchBook  = require('./routers/searchBook')
 const location    = require('./routers/location')
-const comment    = require('./routers/comment')
+const comment     = require('./routers/comment')
 const app         = express()
 
 app.use(bodyParser.json({limit: '50mb',       extended: true}))
@@ -27,3 +27,18 @@ httpServer.listen(port, () => {
 })
 
 module.exports = httpServer
+
+
+const cron = require('node-cron');
+const api_searchBook = require('./api/api_searchBook')
+const api_location = require('./api/api_location')
+
+let DailySchedule = cron.schedule(
+    '* * 0 * * *',
+    () => {
+		api_searchBook.CheckBorrowDate()
+    },
+);
+
+DailySchedule.start();
+

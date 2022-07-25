@@ -52,7 +52,12 @@ router.post('/backCopyByAccession', function (req, res) {
 router.post('/getBorrowingByBranch', function (req, res) {
     BookSearcher.get_borrowing_by_branch(req, res)
 })
-
+router.post('/getAllCopyByBranch', function (req, res) {
+    BookSearcher.get_all_copy_by_branch(req, res)
+})
+router.post('/span', function (req, res) {
+    BookSearcher.span(req, res)
+})
 
 
 module.exports = router

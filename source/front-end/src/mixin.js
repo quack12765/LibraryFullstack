@@ -30,12 +30,24 @@ export default {
 
         // Book & Copy
 
-        HandleBorrow(acc) {
+        MapCodeToState (s) {
+            if(s === 0){
+                return '架上'
+            }else if (s === 1){
+                return '跨行移轉中'
+            }else if (s === 2){
+                return '待預約者取書'
+            }
+            return ''
+        },
+
+        HandleBorrow(acc, loc) {
             this.$http
                 .post('/api/searchBook/borrowCopy', { 
                     data: {
                         accession_number: acc,
-                        account: sessionStorage.getItem("ACCOUNT")
+                        account: 'user',
+                        location: loc
                     } 
                 })
                 .then(res => {
@@ -53,7 +65,8 @@ export default {
                 .post('/api/searchBook/reserveCopy', { 
                     data: {
                         accession_number: copyinfo.accession_number,
-                        branch: copyinfo.location,
+                        cur_location: copyinfo.cur_location,
+                        to_location: copyinfo.location,
                         account: sessionStorage.getItem("ACCOUNT")
                     } 
                 })

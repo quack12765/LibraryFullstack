@@ -57,6 +57,7 @@
                                     <th scope="col">書名</th>
                                     <th scope="col">條碼號</th>
                                     <th scope="col">預約日期</th>
+                                    <th scope="col">取書地點</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
@@ -66,6 +67,7 @@
                                     <td><router-link :to=" '/book/' + b.ISBN ">{{ b.name }}</router-link></td>
                                     <td>{{ b.accession_number }}</td>
                                     <td>{{ ParseDate(b.borrow_date) }}</td>
+                                    <td>{{ b.branch }}</td>
                                     <td><button @click="HandleCancelReserve(b.accession_number)" class="btn btn-danger">取消預約</button></td>
                                 </tr>
                             </tbody>
